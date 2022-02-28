@@ -31,7 +31,7 @@ lines into a single block.  If you don't like this, override it by
     Then you can use **--frame** option whenever you want.
 
 <div>
-    <p><img width="75%" src="https://github.com/kaz-utashiro/greple-frame/blob/main/images/terminal-small.png">
+    <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-small.png">
 </div>
 
 # AUTHOR

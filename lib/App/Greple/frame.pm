@@ -40,7 +40,7 @@ Then you can use B<--frame> option whenever you want.
 
 =begin html
 
-<p><img width="75%" src="https://github.com/kaz-utashiro/greple-frame/blob/main/images/terminal-small.png">
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-small.png">
 
 =end html
 
