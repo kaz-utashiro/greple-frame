@@ -21,6 +21,14 @@ C<top>, C<middle> and C<bottom> frames are printed for blocks.
 If a block is a single line, and you want to collect consecutive lines
 into a single block, use B<--join-blocks> option.
 
+=begin html
+
+=head1 IMAGES
+
+<p><img width="50%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-wordle/main/images/screen.png">
+
+=end html
+
 =head1 AUTHOR
 
 Kazumasa Utashiro
