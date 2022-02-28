@@ -1,13 +1,5 @@
 package App::Greple::frame;
-use 5.014;
-use warnings;
-
 our $VERSION = "0.01";
-
-
-
-1;
-__END__
 
 =encoding utf-8
 
@@ -21,7 +13,13 @@ greple -Mframe
 
 =head1 DESCRIPTION
 
-App::Greple::frame is ...
+Greple -Mframe module set appropriate paramater to put surrounding
+frames for each blocks.
+
+C<top>, C<middle> and C<bottom> frames are printed for blocks.
+
+If a block is a single line, and you want to collect consecutive lines
+into a single block, use B<--join-blocks> option.
 
 =head1 AUTHOR
 
@@ -36,3 +34,51 @@ it under the same terms as Perl itself.
 
 =cut
 
+use 5.014;
+use warnings;
+use utf8;
+
+my($mod, $argv);
+my $width;
+my($head, $blockend, $file_start, $file_end);
+
+sub terminal_width {
+    use Term::ReadKey;
+    my $default = 80;
+    my @size;
+    if (open my $tty, ">", "/dev/tty") {
+	# Term::ReadKey 2.31 on macOS 10.15 has a bug in argument handling
+	# and the latest version 2.38 fails to install.
+	# This code should work on both versions.
+	@size = GetTerminalSize $tty, $tty;
+    }
+    $size[0] or $default;
+}
+
+sub initialize {
+    ($mod, $argv) = @_;
+    $width = terminal_width;
+    
+    my $frame_top    = '──────┬─' . ('─' x ($width - 8));
+    my $frame_middle = '    ⋮ ├╶' . ('╶' x ($width - 8));
+    my $frame_bottom = '──────┴─' . ('─' x ($width - 8));
+
+    $mod->setopt(
+	'--show-frame',
+	'--frame-top'    => "'$frame_top'",
+	'--frame-middle' => "'$frame_middle'",
+	'--frame-bottom' => "'$frame_bottom'",
+	);
+}
+
+1;
+
+__DATA__
+
+option --frame \
+	-n --join-blocks \
+	--colormap=LINE= \
+	--filestyle=once \
+	--format=LINE='%5d │ ' \
+	--blockend= \
+	--show-frame

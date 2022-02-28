@@ -1,22 +1,29 @@
+[![Actions Status](https://github.com/kaz-utashiro/greple-frame/workflows/test/badge.svg)](https://github.com/kaz-utashiro/greple-frame/actions) [![MetaCPAN Release](https://badge.fury.io/pl/App-Greple-frame.svg)](https://metacpan.org/release/App-Greple-frame)
 # NAME
 
-App::Greple::frame - It's new $module
+App::Greple::frame - Greple frame output module
 
 # SYNOPSIS
 
-    use App::Greple::frame;
+greple -Mframe
 
 # DESCRIPTION
 
-App::Greple::frame is ...
+Greple -Mframe module set appropriate paramater to put surrounding
+frames for each blocks.
 
-# LICENSE
+`top`, `middle` and `bottom` frames are printed for blocks.
 
-Copyright (C) Kazumasa Utashiro.
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+If a block is a single line, and you want to collect consecutive lines
+into a single block, use **--join-blocks** option.
 
 # AUTHOR
 
-Kazumasa Utashiro <kaz@utashiro.com>
+Kazumasa Utashiro
+
+# LICENSE
+
+Copyright 2022 Kazumasa Utashiro.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.

@@ -1,7 +1,7 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Greple frame output module",
    "author" : [
-      "Kazumasa Utashiro <kaz@utashiro.com>"
+      "Kazumasa Utashiro"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v3.1.15, CPAN::Meta::Converter version 2.150010",
@@ -42,7 +42,9 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "App::Greple" : "8.57",
+            "Term::ReadKey" : "0",
+            "perl" : "5.014"
          }
       },
       "test" : {
@@ -52,8 +54,21 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/kaz-utashiro/greple-frame/issues"
+      },
+      "homepage" : "https://github.com/kaz-utashiro/greple-frame",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/kaz-utashiro/greple-frame.git",
+         "web" : "https://github.com/kaz-utashiro/greple-frame"
+      }
+   },
    "version" : "0.01",
-   "x_authority" : "cpan:UTASHIRO",
+   "x_contributors" : [
+      "Kazumasa Utashiro <kaz@utashiro.com>"
+   ],
    "x_serialization_backend" : "JSON::PP version 4.02",
    "x_static_install" : 1
 }
