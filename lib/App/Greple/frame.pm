@@ -23,9 +23,7 @@ into a single block, use B<--join-blocks> option.
 
 =begin html
 
-=head1 IMAGES
-
-<p><img width="50%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-wordle/main/images/screen.png">
+<p><img width="75%" src="https://github.com/kaz-utashiro/greple-frame/blob/main/images/terminal-small.png">
 
 =end html
 

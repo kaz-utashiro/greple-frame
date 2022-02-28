@@ -17,6 +17,10 @@ frames for each blocks.
 If a block is a single line, and you want to collect consecutive lines
 into a single block, use **--join-blocks** option.
 
+<div>
+    <p><img width="75%" src="https://github.com/kaz-utashiro/greple-frame/blob/main/images/terminal-small.png">
+</div>
+
 # AUTHOR
 
 Kazumasa Utashiro
