@@ -5,17 +5,30 @@ App::Greple::frame - Greple frame output module
 
 # SYNOPSIS
 
-greple -Mframe
+greple -Mframe --frame ...
 
 # DESCRIPTION
 
-Greple -Mframe module set appropriate paramater to put surrounding
-frames for each blocks.
+Greple -Mframe module provide a capability to put surrounding frames
+for each blocks.
 
 `top`, `middle` and `bottom` frames are printed for blocks.
 
-If a block is a single line, and you want to collect consecutive lines
-into a single block, use **--join-blocks** option.
+By default **--join-blocks** option is enabled to collect consecutive
+lines into a single block.  If you don't like this, override it by
+**--no-join-blocks** option.
+
+# OPTIONS
+
+- **--frame**
+
+    Set frame options.
+
+    Put next line in your `~/.greplerc` to autoload **App::Greple::frame** module.
+
+        autoload -Mframe --frame
+
+    Then you can use **--frame** option whenever you want.
 
 <div>
     <p><img width="75%" src="https://github.com/kaz-utashiro/greple-frame/blob/main/images/terminal-small.png">
