@@ -45,7 +45,7 @@
             "App::Greple" : "8.57",
             "App::ansifold" : "1.14",
             "Term::ReadKey" : "0",
-            "perl" : "5.014"
+            "perl" : "5.016"
          }
       },
       "test" : {
