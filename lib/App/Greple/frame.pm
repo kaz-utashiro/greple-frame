@@ -30,19 +30,20 @@ B<--no-join-blocks> option.
 
 Set frame options.
 
-Put next line in your F<~/.greplerc> to autoload B<App::Greple::frame> module.
+=item B<--frame-fold>
 
-    autoload -Mframe --frame
-
-Then you can use B<--frame> option whenever you want.
-
-=item B<--fold>
-
-Fold long line with frame-friendly prefix string.  Folding width is
-taken from terminal.  If you want to use different width, use
-B<ansifold> command by yourself.
+Set frame and fold long lines with frame-friendly prefix string.
+Folding width is taken from terminal.  If you want to use different
+width, use B<ansifold> command by yourself.
 
 =back
+
+Put next line in your F<~/.greplerc> to autoload B<App::Greple::frame> module.
+
+    autoload -Mframe --frame --frame-fold
+
+Then you can use B<--frame> and B<--frame-fold> option whenever you
+want.
 
 =begin html
 
@@ -112,5 +113,6 @@ option --frame \
 	--blockend= \
 	--show-frame
 
-option --fold \
+option --frame-fold \
+	--frame \
 	--pf 'ansifold --width=term --prefix "      │ "'
