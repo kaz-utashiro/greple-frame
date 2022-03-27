@@ -42,7 +42,7 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "8.57",
+            "App::Greple" : "8.5702",
             "App::ansifold" : "1.14",
             "Term::ReadKey" : "0",
             "perl" : "5.016"
