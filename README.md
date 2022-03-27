@@ -30,6 +30,12 @@ lines into a single block.  If you don't like this, override it by
 
     Then you can use **--frame** option whenever you want.
 
+- **--fold**
+
+    Fold long line with frame-friendly prefix string.  Folding width is
+    taken from terminal.  If you want to use different width, use
+    **ansifold** command by yourself.
+
 <div>
     <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-small.png">
 </div>

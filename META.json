@@ -4,7 +4,7 @@
       "Kazumasa Utashiro"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.15, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.12, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -43,6 +43,7 @@
       "runtime" : {
          "requires" : {
             "App::Greple" : "8.57",
+            "App::ansifold" : "1.14",
             "Term::ReadKey" : "0",
             "perl" : "5.014"
          }
@@ -61,7 +62,7 @@
       "homepage" : "https://github.com/kaz-utashiro/greple-frame",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/kaz-utashiro/greple-frame.git",
+         "url" : "git://github.com/kaz-utashiro/greple-frame.git",
          "web" : "https://github.com/kaz-utashiro/greple-frame"
       }
    },
@@ -69,6 +70,6 @@
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 4.02",
+   "x_serialization_backend" : "JSON::PP version 4.07",
    "x_static_install" : 1
 }

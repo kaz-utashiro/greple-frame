@@ -36,6 +36,12 @@ Put next line in your F<~/.greplerc> to autoload B<App::Greple::frame> module.
 
 Then you can use B<--frame> option whenever you want.
 
+=item B<--fold>
+
+Fold long line with frame-friendly prefix string.  Folding width is
+taken from terminal.  If you want to use different width, use
+B<ansifold> command by yourself.
+
 =back
 
 =begin html
@@ -105,3 +111,6 @@ option --frame \
 	--format=LINE='%5d │ ' \
 	--blockend= \
 	--show-frame
+
+option --fold \
+	--pf 'ansifold --width=term --prefix "      │ "'
