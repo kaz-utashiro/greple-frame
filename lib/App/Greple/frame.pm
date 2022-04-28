@@ -51,6 +51,10 @@ want.
 
 =end html
 
+=head1 SEE ALSO
+
+L<App::ansifold>
+
 =head1 AUTHOR
 
 Kazumasa Utashiro
@@ -110,6 +114,7 @@ option --frame \
 	--colormap=LINE= \
 	--filestyle=once \
 	--format=LINE='%5d │ ' \
+	--format=FILE='\n%s' \
 	--blockend= \
 	--show-frame
 
