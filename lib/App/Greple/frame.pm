@@ -93,7 +93,7 @@ sub initialize {
     ($mod, $argv) = @_;
     $width = terminal_width;
     
-    my $frame_top    = '──────┬─' . ('─' x ($width - 8));
+    my $frame_top    = '      ┌─' . ('─' x ($width - 8));
     my $frame_middle = '    ⋮ ├╶' . ('╶' x ($width - 8));
     my $frame_bottom = '──────┴─' . ('─' x ($width - 8));
 
@@ -114,7 +114,7 @@ option --frame \
 	--colormap=LINE= \
 	--filestyle=once \
 	--format=LINE='%5d │ ' \
-	--format=FILE='\n%s' \
+	--format=FILE='%s' \
 	--blockend= \
 	--show-frame
 
