@@ -51,6 +51,18 @@ want.
 
 =end html
 
+=head1 FUNCTION
+
+=over 7
+
+=item B<set>(B<width>=I<n>])
+
+Set terminal width to I<n>.  Use like this:
+
+    greple -Mframe::set(width=80) ...
+
+=back
+
 =head1 SEE ALSO
 
 L<App::ansifold>
@@ -76,6 +88,10 @@ my($mod, $argv);
 my $width;
 my($head, $blockend, $file_start, $file_end);
 
+my %param = (
+    width => undef,
+);
+
 sub terminal_width {
     use Term::ReadKey;
     my $default = 80;
@@ -89,9 +105,9 @@ sub terminal_width {
     $size[0] or $default;
 }
 
-sub initialize {
+sub finalize {
     ($mod, $argv) = @_;
-    $width = terminal_width;
+    $width = $param{width} || terminal_width;
     
     my $frame_top    = '      ┌─' . ('─' x ($width - 8));
     my $frame_middle = '    ⋮ ├╶' . ('╶' x ($width - 8));
@@ -103,6 +119,18 @@ sub initialize {
 	'--frame-middle' => "'$frame_middle'",
 	'--frame-bottom' => "'$frame_bottom'",
 	);
+    $mod->setopt(
+	'--ansifold',
+	'--pf' => "'ansifold --width=$width --prefix \"      │ \"'",
+	);
+}
+
+sub set {
+    while (my($k, $v) = splice(@_, 0, 2)) {
+	exists $param{$k} or next;
+	$param{$k} = $v;
+    }
+    ();
 }
 
 1;
@@ -118,5 +146,4 @@ option --frame \
 	--show-frame
 
 option --frame-fold \
-	--frame \
-	--pf 'ansifold --width=term --prefix "      │ "'
+	--frame --ansifold

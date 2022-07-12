@@ -41,6 +41,14 @@ want.
     <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-small.png">
 </div>
 
+# FUNCTION
+
+- **set**(**width**=_n_\])
+
+    Set terminal width to _n_.  Use like this:
+
+        greple -Mframe::set(width=80) ...
+
 # SEE ALSO
 
 [App::ansifold](https://metacpan.org/pod/App%3A%3Aansifold)
