@@ -111,10 +111,9 @@ __DATA__
 
 option --frame \
 	-n --join-blocks \
-	--colormap=LINE= \
 	--filestyle=once \
-	--format=LINE='%5d │ ' \
-	--format=FILE='%s' \
+	--colormap LINE=       --format LINE='%5d │ ' \
+	--colormap FILE=555/CE --format FILE=' 📂 %s' \
 	--blockend= \
 	--show-frame
 
