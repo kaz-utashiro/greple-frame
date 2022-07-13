@@ -28,26 +28,32 @@ B<--no-join-blocks> option.
 
 =item B<--frame>
 
-Set frame options.
-
+=for comment
 =item B<--frame-fold>
 
 Set frame and fold long lines with frame-friendly prefix string.
-Folding width is taken from terminal.  If you want to use different
-width, use B<ansifold> command by yourself.
+Folding width is taken from the terminal.  Or you can specify the
+width by calling B<set> function with module option.
+
+=begin comment
+
+=item B<--frame-simple>
+
+Set frame without folding.
+
+=end comment
 
 =back
 
 Put next line in your F<~/.greplerc> to autoload B<App::Greple::frame> module.
 
-    autoload -Mframe --frame --frame-fold
+    autoload -Mframe --frame
 
-Then you can use B<--frame> and B<--frame-fold> option whenever you
-want.
+Then you can use B<--frame> option whenever you want.
 
 =begin html
 
-<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-small.png">
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-2.png">
 
 =end html
 
@@ -60,6 +66,8 @@ want.
 Set terminal width to I<n>.  Use like this:
 
     greple -Mframe::set(width=80) ...
+
+    greple -Mframe::set=width=80 ...
 
 =back
 
@@ -137,7 +145,7 @@ sub set {
 
 __DATA__
 
-option --frame \
+option --frame-simple \
 	-n --join-blocks \
 	--filestyle=once \
 	--colormap LINE=       --format LINE='%5d │ ' \
@@ -146,4 +154,6 @@ option --frame \
 	--show-frame
 
 option --frame-fold \
-	--frame --ansifold
+	--frame-simple --ansifold
+
+option --frame --frame-fold
