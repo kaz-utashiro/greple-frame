@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-frame
 
 {{$NEXT}}
 
+0.04 2022-07-13T08:54:34Z
+
+    - make default action to fold long lines
+
 0.03 2022-07-07T07:55:46Z
 
     - update frame format
