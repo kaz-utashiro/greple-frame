@@ -61,13 +61,19 @@ Then you can use B<--frame> option whenever you want.
 
 =over 7
 
-=item B<set>(B<width>=I<n>])
+=item B<set>(B<width>=I<n>)
 
 Set terminal width to I<n>.  Use like this:
 
     greple -Mframe::set(width=80) ...
 
     greple -Mframe::set=width=80 ...
+
+If non-digit character is found in the value part, it is considered as
+a Reverse Polish Notation, starting terminal width pushed on the
+stack.  Next command set C<terminal-width / 2 - 3>.
+
+    greple -Mframe::set=width=2/3- ...
 
 =back
 
@@ -116,6 +122,11 @@ sub terminal_width {
 sub finalize {
     ($mod, $argv) = @_;
     $width = $param{width} || terminal_width;
+    if ($width =~ /\D/) {
+	require App::Greple::frame::RPN
+	    and App::Greple::frame::RPN->import('rpn_calc');
+	$width = int(rpn_calc(terminal_width, $width)) or die "$width: format error\n";
+    }
     
     my $frame_top    = '      ┌─' . ('─' x ($width - 8));
     my $frame_middle = '    ⋮ ├╶' . ('╶' x ($width - 8));
@@ -129,7 +140,7 @@ sub finalize {
 	);
     $mod->setopt(
 	'--ansifold',
-	'--pf' => "'ansifold --width=$width --prefix \"      │ \"'",
+	'--pf' => "'ansifold -x --width=$width --prefix \"      │ \"'",
 	);
 }
 

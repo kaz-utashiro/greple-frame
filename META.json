@@ -44,6 +44,7 @@
          "requires" : {
             "App::Greple" : "8.58",
             "App::ansifold" : "1.15",
+            "Math::RPN" : "0",
             "Term::ReadKey" : "0",
             "perl" : "5.016"
          }

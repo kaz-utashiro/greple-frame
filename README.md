@@ -38,7 +38,7 @@ Then you can use **--frame** option whenever you want.
 
 # FUNCTION
 
-- **set**(**width**=_n_\])
+- **set**(**width**=_n_)
 
     Set terminal width to _n_.  Use like this:
 
