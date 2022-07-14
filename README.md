@@ -46,6 +46,12 @@ Then you can use **--frame** option whenever you want.
 
         greple -Mframe::set=width=80 ...
 
+    If non-digit character is found in the value part, it is considered as
+    a Reverse Polish Notation, starting terminal width pushed on the
+    stack.  Next command set `terminal-width / 2 - 3`.
+
+        greple -Mframe::set=width=2/3- ...
+
 # SEE ALSO
 
 [App::ansifold](https://metacpan.org/pod/App%3A%3Aansifold)
