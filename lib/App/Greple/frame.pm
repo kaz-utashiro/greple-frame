@@ -71,9 +71,17 @@ Set terminal width to I<n>.  Use like this:
 
 If non-digit character is found in the value part, it is considered as
 a Reverse Polish Notation, starting terminal width pushed on the
-stack.  Next command set C<terminal-width / 2 - 3>.
+stack.  RPN C<2/3-> means C<terminal-width / 2 - 3>.
 
-    greple -Mframe::set=width=2/3- ...
+You can use like this:
+
+    greple -Mframe::set=width=2/3- --frame --uc '(\w+::)+\w+' --git | ansicolumn -PC2
+
+=begin html
+
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-column.png">
+
+=end html
 
 =back
 
