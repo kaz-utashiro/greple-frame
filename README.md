@@ -33,7 +33,7 @@ Put next line in your `~/.greplerc` to autoload **App::Greple::frame** module.
 Then you can use **--frame** option whenever you want.
 
 <div>
-    <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-2.png">
+    <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-3.png">
 </div>
 
 # FUNCTION

@@ -53,7 +53,7 @@ Then you can use B<--frame> option whenever you want.
 
 =begin html
 
-<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-2.png">
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-3.png">
 
 =end html
 
@@ -127,17 +127,20 @@ sub finalize {
 	    and App::Greple::frame::RPN->import('rpn_calc');
 	$width = int(rpn_calc(terminal_width, $width)) or die "$width: format error\n";
     }
-    
-    my $frame_top    = '      ┌─' . ('─' x ($width - 8));
-    my $frame_middle = '    ⋮ ├╶' . ('╶' x ($width - 8));
-    my $frame_bottom = '──────┴─' . ('─' x ($width - 8));
 
-    $mod->setopt(
-	'--show-frame',
-	'--frame-top'    => "'$frame_top'",
-	'--frame-middle' => "'$frame_middle'",
-	'--frame-bottom' => "'$frame_bottom'",
-	);
+    my $frame_top    = '      ┌─' ;
+    my $frame_middle = '    ⋮ ├╶' ;
+    my $frame_bottom = '──────┴─' ;
+
+    for ($frame_top, $frame_middle, $frame_bottom) {
+	if ((my $rest = $width - length) > 0) {
+	    $_ .= (substr($_, -1, 1) x $rest);
+	}
+    }
+
+    $mod->setopt('--show-frame-top',    '--frame-top'    => "'$frame_top'");
+    $mod->setopt('--show-frame-middle', '--frame-middle' => "'$frame_middle'");
+    $mod->setopt('--show-frame-bottom', '--frame-bottom' => "'$frame_bottom'");
     $mod->setopt(
 	'--ansifold',
 	'--pf' => "'ansifold -x --width=$width --prefix \"      │ \"'",
@@ -156,15 +159,22 @@ sub set {
 
 __DATA__
 
+option --frame-color-filename \
+	--colormap FILE=555/CE --format FILE=' 📂 %s'
+
 option --frame-simple \
-	-n --join-blocks \
+	--line-number --join-blocks \
 	--filestyle=once \
 	--colormap LINE=       --format LINE='%5d │ ' \
-	--colormap FILE=555/CE --format FILE=' 📂 %s' \
 	--blockend= \
-	--show-frame
+	--show-frame-middle
 
 option --frame-fold \
+	--frame-color-filename \
 	--frame-simple --ansifold
 
 option --frame --frame-fold
+
+option --frame-classic \
+	--frame-simple \
+	--show-frame-top --show-frame-bottom
