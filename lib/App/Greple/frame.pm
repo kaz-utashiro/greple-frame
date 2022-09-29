@@ -1,6 +1,6 @@
 package App::Greple::frame;
 
-our $VERSION = "0.06";
+our $VERSION = "0.07";
 
 =encoding utf-8
 
