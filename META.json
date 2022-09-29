@@ -43,8 +43,10 @@
       "runtime" : {
          "requires" : {
             "App::Greple" : "8.58",
-            "App::ansifold" : "1.15",
-            "Math::RPN" : "0",
+            "App::ansicolumn" : "1.22",
+            "App::ansifold" : "1.1502",
+            "Getopt::EX::RPN" : "0.01",
+            "List::Util" : "1.29",
             "Term::ReadKey" : "0",
             "perl" : "5.016"
          }
