@@ -22,6 +22,10 @@ lines into a single block.  If you don't like this, override it by
 
 - **--frame**
 
+    <div>
+            <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-3.png">
+    </div>
+
     Set frame and fold long lines with frame-friendly prefix string.
     Folding width is taken from the terminal.  Or you can specify the
     width by calling **set** function with module option.
@@ -33,12 +37,9 @@ lines into a single block.  If you don't like this, override it by
 
 - **--frame-pages**
 
-    Output results in multi-column, paginated format to fit the width of the 
-    terminal.
-
-<div>
-    <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-3.png">
-</div>
+    Output results in multi-column, paginated format to fit the width of
+    the terminal.  The number of columns is automatically calculated from
+    the terminal width.
 
 # FUNCTION
 

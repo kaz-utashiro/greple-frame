@@ -32,6 +32,12 @@ B<--no-join-blocks> option.
 =for comment
 =item B<--frame-fold>
 
+=begin html
+
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-3.png">
+
+=end html
+
 Set frame and fold long lines with frame-friendly prefix string.
 Folding width is taken from the terminal.  Or you can specify the
 width by calling B<set> function with module option.
@@ -51,8 +57,9 @@ Set frame without folding.
 
 =item B<--frame-pages>
 
-Output results in multi-column, paginated format to fit the width of the 
-terminal.
+Output results in multi-column, paginated format to fit the width of
+the terminal.  The number of columns is automatically calculated from
+the terminal width.
 
 =back
 
@@ -65,12 +72,6 @@ Put next line in your F<~/.greplerc> to autoload B<App::Greple::frame> module.
 Then you can use B<--frame> option whenever you want.
 
 =end comment
-
-=begin html
-
-<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-3.png">
-
-=end html
 
 =head1 FUNCTION
 
@@ -200,9 +201,10 @@ __DATA__
 mode function
 
 option --set-frame-width  &set(width=$<shift>)
+option --set-frame-column &set(column=$<shift>)
 
 option --ansifold-with-width \
-       --pf "ansifold -x --discard=EL --padding --prefix '      │ ' $<shift> --width=$<shift>"
+       --pf "ansifold --expand --discard=EL --padding --prefix '      │ ' $<shift> --width=$<shift>"
 
 option --ansifold \
        --ansifold-with-width &get(fold,width)
@@ -233,10 +235,17 @@ option --frame-classic       --frame-classic-fold
 ## EXPERIMENTAL: --frame-pages
 ##
 
-define $FRAME_WIDTH 3
-define $COL_WIDTH   80:8+:$FRAME_WIDTH+
+# RPN
+define @TEXT_WIDTH  80
+define @LINE_WIDTH  8
+define @FRAME_WIDTH 3
+define @MARGIN      0
+define @COL_WIDTH   @TEXT_WIDTH:@LINE_WIDTH:+:@FRAME_WIDTH:+
+define @COLUMN      @COL_WIDTH:/:INT:DUP:1:GE:EXCH:1:IF
+define @WIDTH       DUP:@COLUMN:/:@FRAME_WIDTH:-:@MARGIN:-
+
 define $PREFIX      '      │ '
-define $FOLD        ansifold -x --discard=EL --padding --prefix $PREFIX
+define $FOLD        ansifold --expand --discard=EL --padding --prefix $PREFIX
 define $COLUMN      ansicolumn --border=box -P
 define $FOLD_COLUMN $FOLD $<shift> --width=$<shift> | $COLUMN -C $<shift>
 
@@ -244,7 +253,7 @@ option --frame-column-with-param \
        --pf $FOLD_COLUMN
 
 option --frame-pages \
-       &set(width=DUP:$COL_WIDTH/:INT:DUP:1:GE:EXCH:1:IF:/:$FRAME_WIDTH-) \
-       &set(column=$COL_WIDTH/:INT:DUP:1:GE:EXCH:1:IF) \
+       &set(fold="--boundary=none --linebreak=all --run=@MARGIN") \
+       &set(width=@WIDTH,column=@COLUMN) \
        --frame-plain \
-       --frame-column-with-param &get(fold,width) &get(column)
+       --frame-column-with-param &get(fold,width,column)
