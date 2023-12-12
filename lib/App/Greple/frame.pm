@@ -237,12 +237,12 @@ option --frame-classic       --frame-classic-fold
 
 # RPN
 define @TEXT_WIDTH  80
-define @LINE_WIDTH  8
-define @FRAME_WIDTH 3
+define @LINE_FIELD  8
+define @FRAME_GAP   3
 define @MARGIN      0
-define @COL_WIDTH   @TEXT_WIDTH:@LINE_WIDTH:+:@FRAME_WIDTH:+
+define @COL_WIDTH   @TEXT_WIDTH:@LINE_FIELD:+:@FRAME_GAP:+
 define @COLUMN      @COL_WIDTH:/:INT:DUP:1:GE:EXCH:1:IF
-define @WIDTH       DUP:@COLUMN:/:@FRAME_WIDTH:-:@MARGIN:-
+define @WIDTH       DUP:@COLUMN:/:@FRAME_GAP:-:@MARGIN:-
 
 define $PREFIX      '      │ '
 define $FOLD        ansifold --expand --discard=EL --padding --prefix $PREFIX
