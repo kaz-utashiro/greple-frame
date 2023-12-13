@@ -67,6 +67,8 @@ lines into a single block.  If you don't like this, override it by
 
 [App::ansifold](https://metacpan.org/pod/App%3A%3Aansifold)
 
+[App::ansicolumn](https://metacpan.org/pod/App%3A%3Aansicolumn)
+
 [Math::RPN](https://metacpan.org/pod/Math%3A%3ARPN)
 
 # AUTHOR

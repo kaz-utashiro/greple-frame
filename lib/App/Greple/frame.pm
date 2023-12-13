@@ -1,6 +1,6 @@
 package App::Greple::frame;
 
-our $VERSION = "1.00";
+our $VERSION = "1.01";
 
 =encoding utf-8
 
@@ -104,6 +104,8 @@ You can use like this:
 =head1 SEE ALSO
 
 L<App::ansifold>
+
+L<App::ansicolumn>
 
 L<Math::RPN>
 
