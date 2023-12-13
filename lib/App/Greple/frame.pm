@@ -157,7 +157,7 @@ my %frame_base = (
     top    => '      ┌─' ,
     middle => '    ⋮ ├╶' ,
     bottom => '──────┴─' ,
-    );
+);
 
 sub opt_frame {
     my $pos = shift;
@@ -230,7 +230,7 @@ option --frame-fold  --frame-plain --ansifold
 option --frame       --frame-fold
 
 option --frame-classic-plain --frame-simple --show-frame-top --show-frame-bottom
-option --frame-classic-fold  --frame-classic-plain &opt_ansifold
+option --frame-classic-fold  --frame-classic-plain --ansifold
 option --frame-classic       --frame-classic-fold
 
 ##
@@ -254,8 +254,15 @@ define $FOLD_COLUMN $FOLD $<shift> --width=$<shift> | $COLUMN -C $<shift>
 option --frame-column-with-param \
        --pf $FOLD_COLUMN
 
-option --frame-pages \
+option --frame-pages-body \
        &set(fold="--boundary=none --linebreak=all --run=@MARGIN") \
        &set(width=@WIDTH,column=@COLUMN) \
-       --frame-plain \
        --frame-column-with-param &get(fold,width,column)
+
+option --frame-pages \
+       --frame-pages-body \
+       --frame-plain
+
+option --frame-pages-classic \
+       --frame-pages-body \
+       --frame-classic-plain
