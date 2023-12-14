@@ -61,6 +61,12 @@ Output results in multi-column, paginated format to fit the width of
 the terminal.  The number of columns is automatically calculated from
 the terminal width.
 
+=begin html
+
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
+
+=end html
+
 =back
 
 =begin comment

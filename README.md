@@ -41,6 +41,10 @@ lines into a single block.  If you don't like this, override it by
     the terminal.  The number of columns is automatically calculated from
     the terminal width.
 
+    <div>
+            <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
+    </div>
+
 # FUNCTION
 
 - **set**(**width**=_n_)
