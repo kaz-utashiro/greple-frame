@@ -133,6 +133,9 @@ use warnings;
 use utf8;
 use Data::Dumper;
 
+$ENV{GREPLE_FRAME_PAGES_WIDTH} //= 80;
+$ENV{GREPLE_FRAME_PAGES_MARGIN} //= 0;
+
 my($mod, $argv);
 my($head, $blockend, $file_start, $file_end);
 
@@ -244,21 +247,23 @@ option --frame-classic       --frame-classic-fold
 ##
 
 # RPN
-define @TEXT_WIDTH  80
+define @TEXT_WIDTH  $ENV{GREPLE_FRAME_PAGES_WIDTH}
 define @LINE_FIELD  8
 define @FRAME_GAP   3
-define @MARGIN      0
+define @MARGIN      $ENV{GREPLE_FRAME_PAGES_MARGIN}
 define @COL_WIDTH   @TEXT_WIDTH:@LINE_FIELD:+:@FRAME_GAP:+
 define @COLUMN      @COL_WIDTH:/:INT:DUP:1:GE:EXCH:1:IF
 define @WIDTH       DUP:@COLUMN:/:@FRAME_GAP:-:@MARGIN:-
 
 define $PREFIX      '      │ '
-define $FOLD        ansifold --expand --discard=EL --padding --prefix $PREFIX
+define $FOLD        ansifold --expand --discard=EL --padding --prefix $PREFIX --linebreak=all --runin=@MARGIN --runout=@MARGIN
 define $COLUMN      ansicolumn --border=box -P
-define $FOLD_COLUMN $FOLD $<shift> --width=$<shift> | $COLUMN -C $<shift>
+define $FOLD_FIL    $FOLD $<shift> --width=$<shift>
+define $COLUMN_FIL  $COLUMN -C $<shift>
+define $FOLD_COLUMN_FIL $FOLD $<shift> --width=$<shift> | $COLUMN -C $<shift>
 
 option --frame-column-with-param \
-       --pf $FOLD_COLUMN
+       --pf $FOLD_COLUMN_FIL
 
 option --frame-pages-body \
        &set(fold="--boundary=none --linebreak=all --run=@MARGIN") \
