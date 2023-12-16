@@ -248,32 +248,38 @@ option --frame-classic       --frame-classic-fold
 
 # RPN
 define @TEXT_WIDTH  $ENV{GREPLE_FRAME_PAGES_WIDTH}
+define @MARGIN      $ENV{GREPLE_FRAME_PAGES_MARGIN}
 define @LINE_FIELD  8
 define @FRAME_GAP   3
-define @MARGIN      $ENV{GREPLE_FRAME_PAGES_MARGIN}
 define @COL_WIDTH   @TEXT_WIDTH:@LINE_FIELD:+:@FRAME_GAP:+
 define @COLUMN      @COL_WIDTH:/:INT:DUP:1:GE:EXCH:1:IF
 define @WIDTH       DUP:@COLUMN:/:@FRAME_GAP:-:@MARGIN:-
 
-define $PREFIX      '      │ '
-define $FOLD        ansifold --expand --discard=EL --padding --prefix $PREFIX --linebreak=all --runin=@MARGIN --runout=@MARGIN
-define $COLUMN      ansicolumn --border=box -P
-define $FOLD_FIL    $FOLD $<shift> --width=$<shift>
-define $COLUMN_FIL  $COLUMN -C $<shift>
-define $FOLD_COLUMN_FIL $FOLD $<shift> --width=$<shift> | $COLUMN -C $<shift>
+define $FOLD \
+       ansifold --expand --discard=EL --padding \
+       --width =@WIDTH \
+       --prefix '      │ ' \
+       --boundary=none --linebreak=all --runin=@MARGIN --runout=@MARGIN
 
-option --frame-column-with-param \
-       --pf $FOLD_COLUMN_FIL
+define $COLUMN \
+       ansicolumn --border=box -P -C @COLUMN
 
-option --frame-pages-body \
-       &set(fold="--boundary=none --linebreak=all --run=@MARGIN") \
-       &set(width=@WIDTH,column=@COLUMN) \
-       --frame-column-with-param &get(fold,width,column)
+define $FOLD_COLUMN $FOLD | $COLUMN
+
+option --frame-set-params \
+       &set(width=@WIDTH)
+
+option --frame-page \
+       --frame-set-params \
+       --pf "$FOLD" \
+       --frame-plain
 
 option --frame-pages \
-       --frame-pages-body \
+       --frame-set-params \
+       --pf "$FOLD_COLUMN" \
        --frame-plain
 
 option --frame-pages-classic \
-       --frame-pages-body \
+       --frame-set-params \
+       --pf "$FOLD_COLUMN" \
        --frame-classic-plain
