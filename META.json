@@ -43,7 +43,7 @@
       "runtime" : {
          "requires" : {
             "App::Greple" : "9.0902",
-            "App::ansicolumn" : "1.36",
+            "App::ansicolumn" : "1.39",
             "App::ansifold" : "1.24",
             "Getopt::EX::RPN" : "0.01",
             "List::Util" : "1.29",

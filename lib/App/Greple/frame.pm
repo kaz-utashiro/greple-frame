@@ -42,11 +42,6 @@ Set frame and fold long lines with frame-friendly prefix string.
 Folding width is taken from the terminal.  Or you can specify the
 width by calling B<set> function with module option.
 
-=item B<--set-frame-width>=I<#>
-
-Set frame width.  You have to put this option before B<--frame>
-option.  See B<set> function in L</FUNCTION> section.
-
 =begin comment
 
 =item B<--frame-simple>
@@ -55,17 +50,26 @@ Set frame without folding.
 
 =end comment
 
+=item B<--frame-cols>
+
+Output results in multi-column format to fit the width of the
+terminal.  The number of columns is automatically calculated from the
+terminal width.
+
 =item B<--frame-pages>
 
-Output results in multi-column, paginated format to fit the width of
-the terminal.  The number of columns is automatically calculated from
-the terminal width.
+Output results in multi-column and paginated format.
 
 =begin html
 
 <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
 
 =end html
+
+=item B<--set-frame-width>=I<#>
+
+Set frame width.  You have to put this option before B<--frame>
+option.  See B<set> function in L</FUNCTION> section.
 
 =back
 
@@ -243,7 +247,7 @@ option --frame-classic-fold  --frame-classic-plain --ansifold
 option --frame-classic       --frame-classic-fold
 
 ##
-## EXPERIMENTAL: --frame-pages
+## EXPERIMENTAL: --frame-pages, --frame-cols
 ##
 
 # RPN
@@ -261,25 +265,33 @@ define $FOLD \
        --prefix '      │ ' \
        --boundary=none --linebreak=all --runin=@MARGIN --runout=@MARGIN
 
-define $COLUMN \
-       ansicolumn --border=box -P -C @COLUMN
+define $COLS \
+       ansicolumn --border=box -U @COLUMN
 
-define $FOLD_COLUMN $FOLD | $COLUMN
+define $PAGES \
+       ansicolumn --border=box -P -C @COLUMN
 
 option --frame-set-params \
        &set(width=@WIDTH)
 
-option --frame-page \
+option --frame-col \
        --frame-set-params \
        --pf "$FOLD" \
        --frame-plain
 
 option --frame-pages \
        --frame-set-params \
-       --pf "$FOLD_COLUMN" \
+       --pf "$FOLD | $PAGES" \
        --frame-plain
+
+option --frame-cols \
+       --frame-set-params \
+       --pf "$FOLD | $COLS" \
+       --frame-plain
+
+option --frame-columns --frame-cols
 
 option --frame-pages-classic \
        --frame-set-params \
-       --pf "$FOLD_COLUMN" \
+       --pf "$FOLD | $PAGES" \
        --frame-classic-plain

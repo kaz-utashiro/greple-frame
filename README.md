@@ -35,11 +35,15 @@ lines into a single block.  If you don't like this, override it by
     Set frame width.  You have to put this option before **--frame**
     option.  See **set** function in ["FUNCTION"](#function) section.
 
+- **--frame-cols**
+
+    Output results in multi-column format to fit the width of the
+    terminal.  The number of columns is automatically calculated from the
+    terminal width.
+
 - **--frame-pages**
 
-    Output results in multi-column, paginated format to fit the width of
-    the terminal.  The number of columns is automatically calculated from
-    the terminal width.
+    Output results in multi-column and paginated format.
 
     <div>
             <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
