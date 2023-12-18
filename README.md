@@ -30,11 +30,6 @@ lines into a single block.  If you don't like this, override it by
     Folding width is taken from the terminal.  Or you can specify the
     width by calling **set** function with module option.
 
-- **--set-frame-width**=_#_
-
-    Set frame width.  You have to put this option before **--frame**
-    option.  See **set** function in ["FUNCTION"](#function) section.
-
 - **--frame-cols**
 
     Output results in multi-column format to fit the width of the
@@ -48,6 +43,11 @@ lines into a single block.  If you don't like this, override it by
     <div>
             <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
     </div>
+
+- **--set-frame-width**=_#_
+
+    Set frame width.  You have to put this option before **--frame**
+    option.  See **set** function in ["FUNCTION"](#function) section.
 
 # FUNCTION
 

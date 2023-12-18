@@ -137,8 +137,9 @@ use warnings;
 use utf8;
 use Data::Dumper;
 
-$ENV{GREPLE_FRAME_PAGES_WIDTH} //= 80;
-$ENV{GREPLE_FRAME_PAGES_MARGIN} //= 0;
+$ENV{GREPLE_FRAME_PAGES_WIDTH}    //= '80';
+$ENV{GREPLE_FRAME_PAGES_MARGIN}   //= '0';
+$ENV{GREPLE_FRAME_PAGES_BOUNDARY} //= 'none';
 
 my($mod, $argv);
 my($head, $blockend, $file_start, $file_end);
@@ -263,7 +264,8 @@ define $FOLD \
        ansifold --expand --discard=EL --padding \
        --width =@WIDTH \
        --prefix '      │ ' \
-       --boundary=none --linebreak=all --runin=@MARGIN --runout=@MARGIN
+       --boundary=$ENV{GREPLE_FRAME_PAGES_BOUNDARY} \
+       --linebreak=all --runin=@MARGIN --runout=@MARGIN
 
 define $COLS \
        ansicolumn --border=box -U @COLUMN
