@@ -28,7 +28,7 @@ lines into a single block.  If you don't like this, override it by
 
     Set frame and fold long lines with frame-friendly prefix string.
     Folding width is taken from the terminal.  Or you can specify the
-    width by calling **set** function with module option.
+    width with the **width** parameter.  See ["CONFIGURATION"](#configuration).
 
 - **--frame-cols**
 
@@ -47,17 +47,20 @@ lines into a single block.  If you don't like this, override it by
 - **--set-frame-width**=_#_
 
     Set frame width.  You have to put this option before **--frame**
-    option.  See **set** function in ["FUNCTION"](#function) section.
+    option.  See ["CONFIGURATION"](#configuration).
 
-# FUNCTION
+# CONFIGURATION
 
-- **set**(**width**=_n_)
+Module parameters are set with [Getopt::EX::Config](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3AConfig) by the **config**
+function.  **set** is the same function.
+
+- **config**(**width**=_n_), **set**(**width**=_n_)
 
     Set terminal width to _n_.  Use like this:
 
-        greple -Mframe::set(width=80) ...
+        greple -Mframe::config(width=80) ...
 
-        greple -Mframe::set=width=80 ...
+        greple -Mframe::config=width=80 ...
 
     If non-digit character is found in the value part, it is considered as
     a Reverse Polish Notation, starting terminal width pushed on the
@@ -65,7 +68,9 @@ lines into a single block.  If you don't like this, override it by
 
     You can use like this:
 
-        greple -Mframe::set=width=2/3- --frame --uc '(\w+::)+\w+' --git | ansicolumn -PC2
+        greple -Mframe::config=width=2/3- --frame --uc '(\w+::)+\w+' --git | ansicolumn -PC2
+
+    An unknown parameter is an error.
 
     <div>
             <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-column.png">

@@ -40,7 +40,7 @@ B<--no-join-blocks> option.
 
 Set frame and fold long lines with frame-friendly prefix string.
 Folding width is taken from the terminal.  Or you can specify the
-width by calling B<set> function with module option.
+width with the B<width> parameter.  See L</CONFIGURATION>.
 
 =begin comment
 
@@ -69,7 +69,7 @@ Output results in multi-column and paginated format.
 =item B<--set-frame-width>=I<#>
 
 Set frame width.  You have to put this option before B<--frame>
-option.  See B<set> function in L</FUNCTION> section.
+option.  See L</CONFIGURATION>.
 
 =back
 
@@ -83,17 +83,20 @@ Then you can use B<--frame> option whenever you want.
 
 =end comment
 
-=head1 FUNCTION
+=head1 CONFIGURATION
+
+Module parameters are set with L<Getopt::EX::Config> by the B<config>
+function.  B<set> is the same function.
 
 =over 7
 
-=item B<set>(B<width>=I<n>)
+=item B<config>(B<width>=I<n>), B<set>(B<width>=I<n>)
 
 Set terminal width to I<n>.  Use like this:
 
-    greple -Mframe::set(width=80) ...
+    greple -Mframe::config(width=80) ...
 
-    greple -Mframe::set=width=80 ...
+    greple -Mframe::config=width=80 ...
 
 If non-digit character is found in the value part, it is considered as
 a Reverse Polish Notation, starting terminal width pushed on the
@@ -101,7 +104,9 @@ stack.  RPN C<2/3-> means C<terminal-width / 2 - 3>.
 
 You can use like this:
 
-    greple -Mframe::set=width=2/3- --frame --uc '(\w+::)+\w+' --git | ansicolumn -PC2
+    greple -Mframe::config=width=2/3- --frame --uc '(\w+::)+\w+' --git | ansicolumn -PC2
+
+An unknown parameter is an error.
 
 =begin html
 
@@ -136,6 +141,7 @@ use v5.26;
 use warnings;
 use utf8;
 use Data::Dumper;
+use Getopt::EX::Config qw(config set);
 
 $ENV{GREPLE_FRAME_PAGES_WIDTH}    //= '80';
 $ENV{GREPLE_FRAME_PAGES_MARGIN}   //= '0';
@@ -144,7 +150,9 @@ $ENV{GREPLE_FRAME_PAGES_BOUNDARY} //= 'none';
 my($mod, $argv);
 my($head, $blockend, $file_start, $file_end);
 
-my %param = (
+# config() and set() are the same function.  Values may be RPN, which is
+# calculated when the value is used (see param).
+my $config = Getopt::EX::Config->new(
     width  => undef,
     column => undef,
     fold   => '',
@@ -175,7 +183,7 @@ my %frame_base = (
 
 sub opt_frame {
     my $pos = shift;
-    my $width = $param{width} //= terminal_width;
+    my $width = param('width') // ($config->{width} = terminal_width);
     local $_ = $frame_base{$pos} or die;
     if ((my $rest = $width - length) > 0) {
 	$_ .= (substr($_, -1, 1) x $rest);
@@ -196,18 +204,20 @@ sub rpn {
     int(rpn_calc(@init, $v)) or die "$v: format error\n";
 }
 
-sub set {
-    while (my($k, $v) = splice(@_, 0, 2)) {
-	exists $param{$k} or next;
-	$v = rpn($k, $v) if $rpn{$k} and $v =~ /\D/;
-	$param{$k} = $v;
+# A value can be set at any time before it is used, by the module
+# function or by an option, so the RPN is calculated here.
+sub param {
+    my $k = shift;
+    my $v = $config->{$k};
+    if (defined $v and $rpn{$k} and $v =~ /\D/) {
+	$v = $config->{$k} = rpn($k, $v);
     }
-    ();
+    $v;
 }
 
 sub get {
     use List::Util qw(pairmap);
-    pairmap { $param{$a} } @_;
+    pairmap { param($a) } @_;
 }
 
 1;
