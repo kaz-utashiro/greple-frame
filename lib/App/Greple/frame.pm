@@ -10,7 +10,13 @@ App::Greple::frame - Greple frame output module
 
 =head1 SYNOPSIS
 
+greple -Mframe --style=fold -- ...
+
 greple -Mframe --frame ...
+
+=head1 VERSION
+
+Version 1.03
 
 =head1 DESCRIPTION
 
@@ -23,14 +29,29 @@ By default B<--join-blocks> option is enabled to collect consecutive
 lines into a single block.  If you don't like this, override it by
 B<--no-join-blocks> option.
 
-=head1 OPTIONS
+=head1 MODULE OPTIONS
+
+Options placed between B<-Mframe> and B<--> belong to the module, so
+their names do not conflict with the options of B<greple> or of other
+modules.
+
+    greple -Mframe --style=cols -- pattern file
+
+    greple -Mframe --style=fold --width=80 -- pattern file
+
+When B<--> is given, everything before it must be a module option, so
+C<< -Mframe --frame pattern -- file >> is an error.  Options of
+B<greple> and the pattern come after it.
 
 =over 7
 
-=item B<--frame>
+=item B<--style>=I<name>
 
-=for comment
-=item B<--frame-fold>
+Select the output style.  An unknown name is an error.
+
+=over 7
+
+=item B<fold>
 
 =begin html
 
@@ -40,7 +61,50 @@ B<--no-join-blocks> option.
 
 Set frame and fold long lines with frame-friendly prefix string.
 Folding width is taken from the terminal.  Or you can specify the
-width with the B<width> parameter.  See L</CONFIGURATION>.
+width with the B<--width> option.
+
+=item B<cols>
+
+Output results in multi-column format to fit the width of the
+terminal.  The number of columns is automatically calculated from the
+terminal width.
+
+=item B<pages>
+
+Output results in multi-column and paginated format.
+
+=begin html
+
+<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
+
+=end html
+
+=back
+
+=item B<--width>=I<n>
+
+Same as the B<width> parameter.  See L</CONFIGURATION>.
+
+=item B<--config> I<name>=I<value>,...
+
+Set parameters of L</CONFIGURATION>.
+
+=back
+
+=head1 COMMAND OPTIONS
+
+These options work as options of the B<greple> command, and do not need
+B<-->.  They are kept for compatibility and may be removed in the
+future.  Use L</MODULE OPTIONS>.
+
+=over 7
+
+=item B<--frame>
+
+=for comment
+=item B<--frame-fold>
+
+Same as B<--style=fold>.
 
 =begin comment
 
@@ -52,24 +116,16 @@ Set frame without folding.
 
 =item B<--frame-cols>
 
-Output results in multi-column format to fit the width of the
-terminal.  The number of columns is automatically calculated from the
-terminal width.
+Same as B<--style=cols>.
 
 =item B<--frame-pages>
 
-Output results in multi-column and paginated format.
-
-=begin html
-
-<p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-frame-pages.png">
-
-=end html
+Same as B<--style=pages>.
 
 =item B<--set-frame-width>=I<#>
 
-Set frame width.  You have to put this option before B<--frame>
-option.  See L</CONFIGURATION>.
+Same as B<--width>.  You have to put this option before B<--frame>
+option.
 
 =back
 
@@ -86,11 +142,14 @@ Then you can use B<--frame> option whenever you want.
 =head1 CONFIGURATION
 
 Module parameters are set with L<Getopt::EX::Config> by the B<config>
-function.  B<set> is the same function.
+function.  The B<--config> module option sets the same parameters.
+
+The B<set> function does the same as B<config>.  It is kept only for
+compatibility and will be removed in the future.
 
 =over 7
 
-=item B<config>(B<width>=I<n>), B<set>(B<width>=I<n>)
+=item B<config>(B<width>=I<n>)
 
 Set terminal width to I<n>.  Use like this:
 
@@ -106,6 +165,9 @@ You can use like this:
 
     greple -Mframe::config=width=2/3- --frame --uc '(\w+::)+\w+' --git | ansicolumn -PC2
 
+With B<cols> and B<pages> styles, the whole output has this width, and
+the width and the number of the columns are calculated from it.
+
 An unknown parameter is an error.
 
 =begin html
@@ -113,6 +175,10 @@ An unknown parameter is an error.
 <p><img width="75%" src="https://raw.githubusercontent.com/kaz-utashiro/greple-frame/main/images/terminal-column.png">
 
 =end html
+
+=item B<config>(B<style>=I<name>)
+
+Same as the B<--style> module option.
 
 =back
 
@@ -149,13 +215,15 @@ $ENV{GREPLE_FRAME_PAGES_BOUNDARY} //= 'none';
 
 my($mod, $argv);
 my($head, $blockend, $file_start, $file_end);
+my $frame_width;		# of a column, set by pane()
 
-# config() and set() are the same function.  Values may be RPN, which is
-# calculated when the value is used (see param).
+# set() is kept only for compatibility and will be removed in the future.
+# Values may be RPN, which is calculated when the value is used (see param).
 my $config = Getopt::EX::Config->new(
     width  => undef,
     column => undef,
     fold   => '',
+    style  => undef,
 );
 
 sub terminal_width {
@@ -173,6 +241,18 @@ sub terminal_width {
 
 sub finalize {
     ($mod, $argv) = @_;
+    $config->deal_with($argv, "style=s", "width=s");
+    if (my @extra = $config->argv) {
+	die "@extra: unexpected argument before --\n";
+    }
+    # The default gets the definition, not the name: an autoload of that
+    # name in the rc file would load the module again, which inserts the
+    # default once more and the frame comes out twice.
+    if (my $style = $config->{style}) {
+	my @opt = $mod->getopt("--frame-$style")
+	    or die "$style: unknown style\n";
+	$mod->setopt(default => [ @opt ]);
+    }
 }
 
 my %frame_base = (
@@ -183,7 +263,7 @@ my %frame_base = (
 
 sub opt_frame {
     my $pos = shift;
-    my $width = param('width') // ($config->{width} = terminal_width);
+    my $width = $frame_width // param('width') // ($config->{width} = terminal_width);
     local $_ = $frame_base{$pos} or die;
     if ((my $rest = $width - length) > 0) {
 	$_ .= (substr($_, -1, 1) x $rest);
@@ -215,6 +295,20 @@ sub param {
     $v;
 }
 
+# For the multi-column options: the width parameter takes the place of
+# the terminal width.  Returns the width to fold, the whole width and the
+# number of columns, in the order of $<shift> in their definitions.
+sub pane {
+    my %arg = @_;
+    require Getopt::EX::RPN;
+    my $whole = param('width') // terminal_width;
+    my($width, $column) = map {
+	int(Getopt::EX::RPN::rpn_calc($whole, $_)) or die "$_: format error\n";
+    } @arg{qw(width column)};
+    $frame_width = $width;
+    ($width, $whole, $column);
+}
+
 sub get {
     use List::Util qw(pairmap);
     pairmap { param($a) } @_;
@@ -226,8 +320,8 @@ __DATA__
 
 mode function
 
-option --set-frame-width  &set(width=$<shift>)
-option --set-frame-column &set(column=$<shift>)
+option --set-frame-width  &config(width=$<shift>)
+option --set-frame-column &config(column=$<shift>)
 
 option --ansifold-with-width \
        --pf "ansifold --expand --discard=EL --padding --prefix '      │ ' $<shift> --width=$<shift>"
@@ -272,38 +366,36 @@ define @WIDTH       DUP:@COLUMN:/:@FRAME_GAP:-:@MARGIN:-
 
 define $FOLD \
        ansifold --expand --discard=EL --padding \
-       --width =@WIDTH \
+       --width=$<shift> \
        --prefix '      │ ' \
        --boundary=$ENV{GREPLE_FRAME_PAGES_BOUNDARY} \
        --linebreak=all --runin=@MARGIN --runout=@MARGIN
 
 define $COLS \
-       ansicolumn --border=box -U @COLUMN
+       ansicolumn --border=box -c $<shift> -U $<shift>
 
 define $PAGES \
-       ansicolumn --border=box -P -C @COLUMN
+       ansicolumn --border=box -P -c $<shift> -C $<shift>
 
-option --frame-set-params \
-       &set(width=@WIDTH)
+# &pane is called when these options are expanded, so that it sees the
+# width given by --set-frame-width.  It can not be in the definition of
+# --frame-col and others, because --style puts them in the default option,
+# where functions are not called.
 
-option --frame-col \
-       --frame-set-params \
-       --pf "$FOLD" \
-       --frame-plain
+define $PANE &pane(width=@WIDTH,column=@COLUMN)
 
-option --frame-pages \
-       --frame-set-params \
-       --pf "$FOLD | $PAGES" \
-       --frame-plain
+option --frame-col-pf --pf "$FOLD" $<remove(0,2)>
+option --frame-pages-pf --pf "$FOLD | $PAGES"
+option --frame-cols-pf --pf "$FOLD | $COLS"
 
-option --frame-cols \
-       --frame-set-params \
-       --pf "$FOLD | $COLS" \
-       --frame-plain
+option --frame-col-pane --frame-col-pf $PANE
+option --frame-pages-pane --frame-pages-pf $PANE
+option --frame-cols-pane --frame-cols-pf $PANE
+
+option --frame-col --frame-col-pane --frame-plain
+option --frame-pages --frame-pages-pane --frame-plain
+option --frame-cols --frame-cols-pane --frame-plain
 
 option --frame-columns --frame-cols
 
-option --frame-pages-classic \
-       --frame-set-params \
-       --pf "$FOLD | $PAGES" \
-       --frame-classic-plain
+option --frame-pages-classic --frame-pages-pane --frame-classic-plain
