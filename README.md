@@ -68,7 +68,43 @@ When **--** is given, everything before it must be a module option, so
 
 - **--width**=_n_
 
-    Same as the **width** parameter.  See ["CONFIGURATION"](#configuration).
+    Output width.  It takes the place of the terminal width, and accepts
+    RPN as described in ["CONFIGURATION"](#configuration).
+
+The next options mean the same as the options of the same name of
+[App::ansicolumn](https://metacpan.org/pod/App%3A%3Aansicolumn) and [App::ansifold](https://metacpan.org/pod/App%3A%3Aansifold).
+
+- **--pane**=_n_
+
+    Number of columns of **cols** and **pages** styles.  By default, as many
+    columns as fit in the output width with text of 80 columns.
+
+- **--pane-width**=_n_
+
+    Width of a column of **cols** and **pages** styles, including the border.
+    The number of columns is calculated from it unless **--pane** is given,
+    and the columns are not widened to the output width.
+
+    **--pane** and **--pane-width** accept RPN, starting with the output
+    width.
+
+- **--boundary**=`none`|`word`|`space`
+
+    Where to fold long lines.
+
+- **--linebreak**=`none`|`all`|`runin`|`runout`
+
+    Line-break mode.
+
+- **--runin**=_n_, **--runout**=_n_, **--runlen**=_n_
+
+    Run-in and run-out width.  **--runlen** sets both, and **--runin** and
+    **--runout** take priority over it.  **cols** and **pages** styles keep the
+    run-in width free in the column, so the text area gets shorter.
+
+**cols** and **pages** styles use `--boundary=none`,
+`--linebreak=all` and `--runlen=0` by default.  **fold** style gives
+them to **ansifold** only when they are specified.
 
 - **--config** _name_=_value_,...
 
@@ -131,8 +167,11 @@ compatibility and will be removed in the future.
     </div>
 
 - **config**(**style**=_name_)
+- **config**(**pane**=_n_), **config**(**pane\_width**=_n_)
+- **config**(**boundary**=_name_), **config**(**linebreak**=_name_)
+- **config**(**runin**=_n_), **config**(**runout**=_n_), **config**(**runlen**=_n_)
 
-    Same as the **--style** module option.
+    Same as the module options of the same name.
 
 # SEE ALSO
 

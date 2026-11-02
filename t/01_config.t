@@ -101,6 +101,73 @@ unlike((run('-Mframe', '--style=cols', '--width=80', '--'))[0] // '', qr/^┌─
 is((run('-Mframe', '--width=60', '--', '--frame-col'))[1], 0, '--frame-col runs');
 is((run('-Mframe', '--width=60', '--', '--frame-pages-classic'))[1], 0, '--frame-pages-classic runs');
 
+# text_width, margin and boundary of the multi-column styles.
+sub columns {
+    my($out) = run(@_);
+    my($top) = ($out // '') =~ /^(┌.*)$/m;
+    defined $top ? scalar(() = $top =~ /┌/g) : 0;
+}
+sub separator {
+    my($out) = run(@_);
+    my($line) = ($out // '') =~ /(╶+)/;
+    defined $line ? length $line : 0;
+}
+is(columns('-Mframe', '--style=cols', '--width=200', '--'), 2, 'width 200: 2 columns');
+is(columns('-Mframe', '--style=cols', '--width=200', '--pane=3', '--'), 3, '--pane=3');
+is(widths('-Mframe', '--style=cols', '--width=200', '--pane=3', '--'), 198, '--pane=3 fills the whole width');
+is(columns('-Mframe', '--style=cols', '--width=200', '--pane=85/', '--'), 2, '--pane takes RPN of the whole width');
+is(columns('-Mframe::config(style=cols,width=200,pane=3)'), 3, 'config(pane=3)');
+is(columns('-Mframe::config(width=200)', '--set-frame-column=3', '--frame-cols'), 3, '--set-frame-column=3');
+is(columns('-Mframe', '--style=cols', '--width=200', '--pane-width=60', '--'), 3, '--pane-width=60: 3 columns');
+is(widths('-Mframe', '--style=cols', '--width=200', '--pane-width=60', '--'), 180, '--pane-width does not widen');
+is(widths('-Mframe', '--style=cols', '--width=200', '--pane_width=60', '--'), 180, '--pane_width=60');
+# a page shows only the columns it fills, and this short file fills one
+is(widths('-Mframe', '--style=pages', '--width=200', '--pane-width=60', '--'), 60, '--pane-width with pages');
+is(columns('-Mframe', '--style=cols', '--width=200', '--pane-width=60', '--pane=2', '--'), 2, '--pane comes before --pane-width');
+{
+    local $ENV{GREPLE_FRAME_PAGES_WIDTH} = 40;
+    is(columns('-Mframe', '--style=cols', '--width=200', '--'), 3, 'GREPLE_FRAME_PAGES_WIDTH gives the default');
+    is(columns('-Mframe', '--style=cols', '--width=200', '--pane=2', '--'), 2, '--pane overrides it');
+}
+my $sep = separator('-Mframe', '--style=cols', '--width=80', '--');
+is(separator('-Mframe', '--style=cols', '--width=80', '--runin=4', '--'), $sep - 4, '--runin=4 narrows the text');
+is(separator('-Mframe', '--style=cols', '--width=80', '--runlen=4', '--'), $sep - 4, '--runlen=4 narrows the text');
+is(separator('-Mframe', '--style=cols', '--width=80', '--runout=4', '--'), $sep, '--runout=4 does not');
+is(separator('-Mframe', '--style=cols', '--width=80', '--runlen=4', '--runin=2', '--'), $sep - 2, '--runin comes before --runlen');
+is(widths('-Mframe', '--style=cols', '--width=80', '--runin=4', '--'), 80, '--runin keeps the whole width');
+is((run('-Mframe', '--style=cols', '--linebreak=none', '--'))[1], 0, '--linebreak=none');
+is((run('-Mframe', '--style=fold', '--width=40', '--runlen=2', '--linebreak=all', '--'))[1], 0, '--runlen and --linebreak with --frame');
+{
+    local $ENV{GREPLE_FRAME_PAGES_MARGIN} = 4;
+    is(separator('-Mframe', '--style=cols', '--width=80', '--'), $sep - 4, 'GREPLE_FRAME_PAGES_MARGIN gives the default');
+    is(separator('-Mframe', '--style=cols', '--width=80', '--runlen=0', '--'), $sep, '--runlen overrides it');
+}
+{
+    my($lfh, $long) = tempfile(UNLINK => 1);
+    print $lfh "hello ", "abcdefghij " x 40, "\n";
+    close $lfh;
+    my $cut = sub {
+	open my $p, '-|', 'greple', @_, 'hello', $long or die "greple: $!";
+	binmode $p, ':encoding(utf-8)';
+	my $o = do { local $/; <$p> };
+	close $p;
+	$o =~ s/\e\[[\d;]*[mK]//g;
+	return -1 if $o !~ /hello/;
+	scalar(() = $o =~ /│ *[b-gij]/g);
+    };
+    ok($cut->('-Mframe', '--style=cols', '--') > 0, 'boundary none cuts words');
+    is($cut->('-Mframe', '--style=cols', '--boundary=word', '--'), 0, '--boundary=word does not');
+    is($cut->('-Mframe', '--style=fold', '--width=40', '--boundary=word', '--'), 0, '--boundary=word works with --frame');
+    ok($cut->('-Mframe', '--style=fold', '--width=40', '--') > 0, 'no boundary for --frame by default');
+    is($cut->('-Mframe::config(width=40,boundary=word)', '--frame'), 0, 'config(boundary=word)');
+    local $ENV{GREPLE_FRAME_PAGES_BOUNDARY} = 'word';
+    is($cut->('-Mframe', '--style=cols', '--'), 0, 'GREPLE_FRAME_PAGES_BOUNDARY gives the default');
+    ok($cut->('-Mframe', '--style=cols', '--boundary=none', '--') > 0, '--boundary overrides it');
+    ok($cut->('-Mframe', '--style=fold', '--width=40', '--') > 0, 'the variable is only for the multi-column styles');
+}
+
+isnt((run('-Mframe', '--style=cols', '--width=80', '--runin=100', '--'))[1], 0, 'too large a run-in is an error');
+isnt((run('-Mframe', '--runin=abc', '--'))[1], 0, 'the run-in is a number');
 isnt((run('-Mframe', '--style=nosuch', '--'))[1], 0, 'an unknown style is an error');
 isnt((run('-Mframe', '--nosuchoption', '--'))[1], 0, 'an unknown module option is an error');
 isnt((run('-Mframe', 'extra', '--'))[1], 0, 'an argument before -- is an error');

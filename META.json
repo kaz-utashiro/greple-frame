@@ -47,7 +47,6 @@
             "App::ansifold" : "1.24",
             "Getopt::EX::Config" : "1.0202",
             "Getopt::EX::RPN" : "0.01",
-            "List::Util" : "1.29",
             "Term::ReadKey" : "0",
             "perl" : "v5.26.0"
          }
