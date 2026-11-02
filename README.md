@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/kaz-utashiro/greple-frame/workflows/test/badge.svg)](https://github.com/kaz-utashiro/greple-frame/actions) [![MetaCPAN Release](https://badge.fury.io/pl/App-Greple-frame.svg)](https://metacpan.org/release/App-Greple-frame)
+[![Actions Status](https://github.com/kaz-utashiro/greple-frame/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kaz-utashiro/greple-frame/actions?workflow=test) [![MetaCPAN Release](https://badge.fury.io/pl/App-Greple-frame.svg)](https://metacpan.org/release/App-Greple-frame)
 # NAME
 
 App::Greple::frame - Greple frame output module
@@ -85,7 +85,7 @@ Kazumasa Utashiro
 
 # LICENSE
 
-Copyright 2022-2023 Kazumasa Utashiro.
+Copyright 2022-2026 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

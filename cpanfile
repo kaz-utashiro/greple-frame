@@ -1,4 +1,4 @@
-requires 'perl', 'v5.18.2';
+requires 'perl', '5.026';
 requires 'App::Greple', '9.0902';
 requires 'Term::ReadKey';
 requires 'List::Util', '1.29';
