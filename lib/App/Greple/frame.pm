@@ -1,6 +1,6 @@
 package App::Greple::frame;
 
-our $VERSION = "1.03";
+our $VERSION = "1.04";
 
 =encoding utf-8
 
@@ -16,7 +16,7 @@ greple -Mframe --frame ...
 
 =head1 VERSION
 
-Version 1.03
+Version 1.04
 
 =head1 DESCRIPTION
 
